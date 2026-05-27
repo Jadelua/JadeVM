@@ -1,7 +1,3 @@
-local stack = {}
-local code = {}
-local ip = 1
-
 local function newVM()
     return {
         stack = {},
@@ -382,7 +378,10 @@ handlers[OP.EXT] = function(vm, arg)
     
     local ok, mod = pcall(require, arg)
     if not ok then
-        error("VM error <" .. vm.ip .. ">: failed to load module '" .. arg .. "': " .. mod)
+        mod = _G[arg]
+        if type(mod) ~= "table" then
+            error("VM error <" .. vm.ip .. ">: failed to load module or global '" .. arg .. "'")
+        end
     end
     
     vm.ext = vm.ext or {}
@@ -432,6 +431,8 @@ handlers[OP.PUSH_STR] = function(vm, arg)
     push(vm.stack, str)
 end
 
+local jvm = {}
+
 local function VM(bytecode)
     local vm = newVM()
     local labels = {}
@@ -470,44 +471,4 @@ local function VM(bytecode)
     end
 end
 
-VM([[
--- Fibonacci
-PUSH_INT 0
-STORE a
-
-PUSH_INT 1
-STORE b
-
-PUSH_INT 15
-STORE n
-
-loop:
-
-    LOAD a
-    PRINT
-
-    -- c = a + b
-    LOAD a
-    LOAD b
-    ADD
-    STORE c
-
-    -- a = b
-    LOAD b
-    STORE a
-
-    -- b = c
-    LOAD c
-    STORE b
-
-    -- n = n - 1
-    LOAD n
-    PUSH_INT 1
-    SUB
-    STORE n
-
-    LOAD n
-    JNZ loop
-
-HALT
-]])
+return jvm
