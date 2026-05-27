@@ -73,10 +73,14 @@ local OP = {
     -- functions
     CALL = 22,
     RET = 23,
-    LOAD_ARG = 25,
+    LOAD_ARG = 24,
 
     -- misc
-    HALT = 24,
+    HALT = 25,
+
+    -- external
+    EXT = 26,
+    EXT_CALL = 27,
     
 }
 
@@ -369,6 +373,58 @@ end
 handlers[OP.LOAD_ARG] = function(vm)
     local frame = pop(vm.callstack, vm.ip)
     push(vm.stack, frame.arg)
+end
+
+handlers[OP.EXT] = function(vm, arg)
+    if not arg or arg == "" then
+        error("VM error <" .. vm.ip .. ">: EXT missing module name")
+    end
+    
+    local ok, mod = pcall(require, arg)
+    if not ok then
+        error("VM error <" .. vm.ip .. ">: failed to load module '" .. arg .. "': " .. mod)
+    end
+    
+    vm.ext = vm.ext or {}
+    vm.ext[arg] = mod
+end
+
+handlers[OP.EXT_CALL] = function(vm, arg)
+    if not arg then
+        error("VM error <" .. vm.ip .. ">: EXT_CALL missing arguments")
+    end
+    
+    local mod_name, func_name, count_str = arg:match("^(%S+)%s+(%S+)%s+(%d+)$")
+    if not mod_name then
+        error("VM error <" .. vm.ip .. ">: EXT_CALL syntax: 'module func count'")
+    end
+    
+    local count = tonumber(count_str)
+    if count < 0 then
+        error("VM error <" .. vm.ip .. ">: EXT_CALL arg count must be >= 0")
+    end
+    
+    vm.ext = vm.ext or {}
+    local mod = vm.ext[mod_name]
+    if not mod then
+        error("VM error <" .. vm.ip .. ">: module '" .. mod_name .. "' not loaded, use EXT first")
+    end
+    
+    local func = mod[func_name]
+    if not func then
+        error("VM error <" .. vm.ip .. ">: function '" .. func_name .. "' not found in module '" .. mod_name .. "'")
+    end
+    
+    local args = {}
+    for i = count, 1, -1 do
+        args[i] = pop(vm.stack, vm.ip)
+    end
+    
+    local result = func(table.unpack(args))
+    
+    if result ~= nil then
+        push(vm.stack, result)
+    end
 end
 
 local function VM(bytecode)
