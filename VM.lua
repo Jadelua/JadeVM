@@ -377,15 +377,17 @@ local function VM(bytecode)
     local instructions = {}
 
     for line in bytecode:gmatch("([^\n]+)") do
-        local label = line:match("^(%w+):$")
-
-        if label then
-            labels[label] = #instructions + 1
-        else
-            local op, arg = line:match("^(%S+)%s*(.*)$")
-            op = OP[op]
-
-            table.insert(instructions, {op, arg})
+        local trimmed = line:match("^%s*(.-)%s*$")
+        
+        if trimmed ~= "" and not trimmed:match("^%-%-") then
+            local label = trimmed:match("^(%w+):$")
+            if label then
+                labels[label] = #instructions + 1
+            else
+                local op, arg = trimmed:match("^(%S+)%s*(.*)$")
+                op = OP[op]
+                table.insert(instructions, {op, arg})
+            end
         end
     end
 
@@ -404,18 +406,47 @@ local function VM(bytecode)
         if vm.ip == old_ip then
             vm.ip = vm.ip + 1
         end
-    endç
+    end
 end
 
 VM([[
-JMP main
+-- Fibonacci
+PUSH_INT 0
+STORE a
 
-func:
-PUSH_INT 5
-PRINT
-RET
+PUSH_INT 1
+STORE b
 
-main:
-CALL func
+PUSH_INT 15
+STORE n
+
+loop:
+
+    LOAD a
+    PRINT
+
+    -- c = a + b
+    LOAD a
+    LOAD b
+    ADD
+    STORE c
+
+    -- a = b
+    LOAD b
+    STORE a
+
+    -- b = c
+    LOAD c
+    STORE b
+
+    -- n = n - 1
+    LOAD n
+    PUSH_INT 1
+    SUB
+    STORE n
+
+    LOAD n
+    JNZ loop
+
 HALT
 ]])
