@@ -39,6 +39,7 @@ end
 local OP = {
     -- stack
     PUSH_INT = 1,
+    PUSH_STR = 28,
     POP = 2,
     DUP = 3,
 
@@ -81,7 +82,6 @@ local OP = {
     -- external
     EXT = 26,
     EXT_CALL = 27,
-    
 }
 
 local handlers = {}
@@ -425,6 +425,11 @@ handlers[OP.EXT_CALL] = function(vm, arg)
     if result ~= nil then
         push(vm.stack, result)
     end
+end
+
+handlers[OP.PUSH_STR] = function(vm, arg)
+    local str = arg:match('^"(.*)"$') or arg
+    push(vm.stack, str)
 end
 
 local function VM(bytecode)
