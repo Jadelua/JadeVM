@@ -35,5 +35,3 @@ HALT - ends the program/code
 EXT mod_name - requires a lua library or a .lua module
 EXT_CALL mod_name func_name arg_count - calls a function from the module or library, mod name is the module name, func name is the function name and arg count is the arguments to input from stack (LIFO)
 </pre>
-
-later going to implement comments (right now, comments do not exist)
