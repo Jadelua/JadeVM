@@ -8,6 +8,7 @@ Instructions:
 
 <pre>
 PUSH_INT int - Pushes an int to the stack (LIFO)
+PUSH_STR string - pushes a string to the stack
 POP - pops the last value from the stack
 DUP - duplicates the last value in the stack [5] -> [5, 5]
 ADD - addition
