@@ -299,7 +299,6 @@ handlers[OP.STORE] = function(vm, arg)
     local target = pop(vm.stack, vm.ip)
     local frame = vm.frames[#vm.frames]
     frame.vars[arg] = target
-    vm.vars[arg] = target
 
     vm.vars[arg] = target
 end
@@ -308,7 +307,7 @@ handlers[OP.LOAD] = function(vm, arg)
     local frame = vm.frames[#vm.frames]
     local scope_Var = frame.vars[arg]
     
-    if scope_Var then
+    if scope_Var ~= nil then
         push(vm.stack, scope_Var)
     else
         error("VM error <" .. vm.ip .. ">: undefined variable: " .. arg)
@@ -367,7 +366,7 @@ handlers[OP.RET] = function(vm, arg)
 end
 
 handlers[OP.LOAD_ARG] = function(vm)
-    local frame = pop(vm.callstack, vm.ip)
+    local frame = vm.frames[#vm.frames]
     push(vm.stack, frame.arg)
 end
 
@@ -433,7 +432,7 @@ end
 
 local jvm = {}
 
-local function VM(bytecode)
+function jvm.VM(bytecode)
     local vm = newVM()
     local labels = {}
     local instructions = {}
