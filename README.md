@@ -43,7 +43,7 @@ NOR - nor logical operator
 XOR - xor logical operator
 XNOR - xnor logical operator
 NEW_ARRAY amount - creates an array, amount works like just arg_count from EXT_CALL
-GET_ARRAY element - pushes an element from an array, element should be an integer, also if element is not passed then it would just push everything the array has into the stack
+GET_ARRAY - pushes an element from an array, index is the last value from the stack
 SET_ARRAY value, pos - pushes or changes an element into the table, value is required while pos is optional
 GET_ARRAY_SIZE - pushes the size of the array
 GET_TYPE - gets the type of a value (be ware it pushes a value from 1 to 9, NOT a string, use TYPE_TO_STRING to conver it to a string)
