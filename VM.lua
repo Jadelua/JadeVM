@@ -630,13 +630,12 @@ handlers[OP.GET_ARRAY] = function(vm)
         error("VM error <"..vm.ip..">: stack underflow")
     end
 
+    local arg = pop(vm.stack, vm.ip)
     local t = pop(vm.stack, vm.ip)
     
     if type(t) ~= "table" then
         error("VM error <"..vm.ip..">: tried to use GET_ARRAY on a non-array value")
     end
-
-    local arg = pop(vm.stack, vm.ip)
 
     if arg and not tonumber(arg) then
         push(vm.stack, t[tonumber(arg)])
