@@ -7,8 +7,7 @@ inside VM.lua, there is a function VM(codebyte) where codebyte is a multi-line s
 Instructions:
 
 <pre>
-PUSH_INT int - Pushes an int to the stack (LIFO)
-PUSH_STR string - pushes a string to the stack
+PUSH value - Pushes an int to the stack (LIFO)
 POP - pops the last value from the stack
 DUP - duplicates the last value in the stack [5] -> [5, 5]
 ADD - addition
@@ -28,10 +27,23 @@ GTE - basically GT + EQ
 PRINT - prints the last thing into the console
 STORE var - stores a variable
 LOAD var - loads a variable
-CALL label - calls a function/label
+CALL label arg_count - calls a function/label, arg_count works just like the EXT_CALL's one
 RET arg - returns + ends the function (Required for every function made, arg is optional)
 LOAD_ARG - returns the last thing before function call (Should only be called inside a function)
 HALT - ends the program/code
 EXT mod_name - requires a lua library or a .lua module
 EXT_CALL mod_name func_name arg_count - calls a function from the module or library, mod name is the module name, func name is the function name and arg count is the arguments to input from stack (LIFO)
+AND - and logical operator
+OR - or logical operator
+NOT - not logical operator
+NAND - nand logical operator
+NOR - nor logical operator
+XOR - xor logical operator
+XNOR - xnor logical operator
+NEW_ARRAY amount - creates an array, amount works like just arg_count from EXT_CALL
+GET_ARRAY element - pushes an element from an array, element should be an integer, also if element is not passed then it would just push everything the array has into the stack
+SET_ARRAY value, pos - pushes or changes an element into the table, value is required while pos is optional
+GET_ARRAY_SIZE - pushes the size of the array
+GET_TYPE - gets the type of a value (be ware it pushes a value from 1 to 9, NOT a string, use TYPE_TO_STRING to conver it to a string)
+TYPE_TO_STRING - converts a number between 1 to 9 into a type, intended to be used after GET_TYPE)
 </pre>
