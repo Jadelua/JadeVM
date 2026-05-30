@@ -1,5 +1,6 @@
 # JadeVM
-A VM that executes Codebyte, made with pure lua
+A VM that executes Codebyte, made only using lua
+Has support for polytoria's modulescript
 
 How to use:
 inside VM.lua, there is a function VM(codebyte) where codebyte is a multi-line string
