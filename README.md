@@ -48,4 +48,5 @@ SET_ARRAY value, pos - pushes or changes an element into the table, value is req
 GET_ARRAY_SIZE - pushes the size of the array
 GET_TYPE - gets the type of a value (be ware it pushes a value from 1 to 9, NOT a string, use TYPE_TO_STRING to conver it to a string)
 TYPE_TO_STRING - converts a number between 1 to 9 into a type, intended to be used after GET_TYPE)
+STRING_TO_ARRAY - converts a string into an array
 </pre>
