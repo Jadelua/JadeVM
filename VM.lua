@@ -625,16 +625,20 @@ handlers[OP.NEW_ARRAY] = function(vm, count)
     push(vm.stack, {})
 end
 
-handlers[OP.GET_ARRAY] = function(vm, arg)
-    if type(peek(vm.stack)) ~= "table" then
-        error("VM error <"..vm.ip..">: tried to use GET_ARRAY on a non-array value")
+handlers[OP.GET_ARRAY] = function(vm)
+    if #vm.stack <= 1 then
+        error("VM error <"..vm.ip..">: stack underflow"
     end
 
     local t = pop(vm.stack, vm.ip)
+    
+    if type(t) ~= "table" then
+        error("VM error <"..vm.ip..">: tried to use GET_ARRAY on a non-array value")
+    end
+
+    local arg = pop(vm.stack, vm.ip)
 
     if arg and not tonumber(arg) then
-        error("VM error <"..vm.ip..">: GET_ARRAY expected integer, instead got: "..type(arg))
-    elseif arg then
         push(vm.stack, t[tonumber(arg)])
         return
     end
