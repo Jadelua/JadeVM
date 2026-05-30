@@ -179,6 +179,7 @@ local OP = {
     GET_TYPE = 38,
     PUSH_STR = 39, -- made it cus PUSH cannot push things like "123"
     TYPE_TO_STRING = 40,
+    STRING_TO_ARRAY = 41,
 }
 
 local handlers = {}
@@ -800,6 +801,29 @@ handlers[OP.TYPE_TO_STRING] = function(vm)
     elseif value == 9 then
         push(vm.stack, "T_STRUCT")
     end
+end
+
+handlers[OP.STRING_TO_ARRAY] = function(vm)
+    if #vm.stack == 0 then
+        error("VM error <"..vm.ip..">: stack underflow")
+    end
+
+    local stringval = pop(vm.stack, vm.ip)
+
+    if type(stringval) ~= "string" then
+        error("VM error <"..vm.ip..">: passed a non-string value to STRING_TO_ARRAY")
+    end
+    
+    local string_array = {}
+
+    for i = 1, #stringval then
+        table.insert(string_array, stringval:sub(i, i))
+    end
+
+    -- uncomment this if you plan on adding stuff into the string array (specifically nil)
+    -- table.insert(string_array, #string_array + 1, ARRAY_END)
+
+    push(vm.stack, string_array)
 end
 
 local jvm = {} -- JadeVM, the name of my VM
