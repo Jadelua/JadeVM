@@ -816,7 +816,7 @@ handlers[OP.STRING_TO_ARRAY] = function(vm)
     
     local string_array = {}
 
-    for i = 1, #stringval then
+    for i = 1, #stringval do
         table.insert(string_array, stringval:sub(i, i))
     end
 
