@@ -629,24 +629,24 @@ handlers[OP.GET_ARRAY] = function(vm)
     if #vm.stack <= 1 then
         error("VM error <"..vm.ip..">: stack underflow")
     end
-
+    
     local arg = pop(vm.stack, vm.ip)
     local t = pop(vm.stack, vm.ip)
     
     if type(t) ~= "table" then
         error("VM error <"..vm.ip..">: tried to use GET_ARRAY on a non-array value")
     end
-
-    if arg and not tonumber(arg) then
+    
+    if arg ~= nil and tonumber(arg) then
         push(vm.stack, t[tonumber(arg)])
         return
     end
-
+    
     for i = 1, #t do
         if t[i] == ARRAY_END then
             break
         end
-
+    
         push(vm.stack, t[i])
     end
 end
