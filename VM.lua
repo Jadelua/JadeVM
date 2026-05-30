@@ -627,7 +627,7 @@ end
 
 handlers[OP.GET_ARRAY] = function(vm)
     if #vm.stack <= 1 then
-        error("VM error <"..vm.ip..">: stack underflow"
+        error("VM error <"..vm.ip..">: stack underflow")
     end
 
     local t = pop(vm.stack, vm.ip)
