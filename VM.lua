@@ -636,6 +636,10 @@ handlers[OP.GET_ARRAY] = function(vm)
     if type(t) ~= "table" then
         error("VM error <"..vm.ip..">: tried to use GET_ARRAY on a non-array value")
     end
+
+    if arg > #t then
+        error("VM error <"..vm.ip..">: stack overflow")
+    end
     
     if arg ~= nil and tonumber(arg) then
         push(vm.stack, t[tonumber(arg)])
