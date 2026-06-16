@@ -764,7 +764,7 @@ handlers[OP.GET_TYPE] = function(vm)
     end
 
     local value = pop(vm.stack, vm.ip)
-    push(vm.stack, getType(value)) -- you can replace type() with typeof() if you are using luau
+    push(vm.stack, getType(value)) -- you can replace getType() with typeof() if you are using luau
 end
 
 handlers[OP.PUSH_STR] = function(vm, arg)
